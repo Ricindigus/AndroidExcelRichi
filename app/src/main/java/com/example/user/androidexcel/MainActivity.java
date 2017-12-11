@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -74,8 +75,15 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
         switch (v.getId())
         {
             case R.id.writeExcel:
-                File nuevaCarpeta = new File(getExternalStorageDirectory(), "miCarpeta");
-                nuevaCarpeta.mkdirs();
+//                File nuevaCarpeta = new File(getExternalStorageDirectory(), "RICARDODIR");
+//                nuevaCarpeta.mkdirs();
+                File wallpaperDirectory = new File("/sdcard/Wallpaper/");
+// have the object build the directory structure, if needed.
+                wallpaperDirectory.mkdirs();
+//// create a File object for the output file
+//                File outputFile = new File(wallpaperDirectory, filename);
+//// now attach the OutputStream to the file object, instead of a String representation
+//                FileOutputStream fos = new FileOutputStream(outputFile);
                 saveExcelFile(this,"/myExcel.xls");
                 break;
             case R.id.readExcel:
@@ -181,8 +189,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                 File file = new File(context.getExternalFilesDir(null), filename);
                 FileInputStream myInput = new FileInputStream(file);
 
+                InputStream stream = context.getAssets().open("myExcel.xls");
                 // Create a POIFSFileSystem object
-                POIFSFileSystem myFileSystem = new POIFSFileSystem(myInput);
+                POIFSFileSystem myFileSystem = new POIFSFileSystem(stream);
 
                 // Create a workbook using the File System
                 HSSFWorkbook myWorkBook = new HSSFWorkbook(myFileSystem);
@@ -202,10 +211,10 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                     while(cellIter.hasNext()){
                         HSSFCell myCell = (HSSFCell) cellIter.next();
                         Log.d(TAG, "Cell Value: " +  myCell.toString());
-                        m = m + myCell.toString();
-                        if(contador == 1) itemMarco.setNumero(myCell.toString());
+//                        m = m + myCell.toString();
+                        if(contador == 1) itemMarco.setNumero(""+(int)myCell.getNumericCellValue());
                         if(contador == 2) itemMarco.setRuc(myCell.toString());
-                        if(contador == 3) itemMarco.setRazonSocial(myCell.toString());
+                        if(contador == 3) itemMarco.setRazonSocial(""+(int)myCell.getNumericCellValue());
                         contador++;
 //                    Toast.makeText(context, "cell Value: " + myCell.toString(), Toast.LENGTH_SHORT).show();
                     }
